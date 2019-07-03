@@ -3,7 +3,7 @@
         <div class="content">
             <div class="top">
                 <div class="header">
-                    <!--<img alt="logo" class="logo" src="@/assets/logo.png"/>-->
+                    <img alt="logo" class="logo" src="@/assets/logo.png"/>
                     <span class="title"></span>
                 </div>
                 <div class="desc"></div>
@@ -38,6 +38,10 @@
         .content{
             padding: 32px 0;
             flex: 1;
+            .top{
+                width: 200px;
+                margin: 0 auto;
+            }
             .main-content {
                 width: 368px;
                 margin: 0 auto;

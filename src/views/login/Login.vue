@@ -3,11 +3,11 @@
         <a-form :form="form" @submit="handleSubmit">
             <a-tabs :tab-bar-style="{textAlign:'center'}" :activeKey="activeKey" @change="handleTabChange">
                 <a-tab-pane tab="账户密码登录" key="1">
-                    <a-alert type="success" closable message="error" showIcon
+                    <a-alert type="error" closable v-show="error" :message="error" showIcon
                              style="margin-bottom: 24px;"></a-alert>
                     <a-form-item>
                         <a-input
-                                v-decorator="['name',{rules:[{required:true,message:'请输入账户名',whitespace:true}]}]"
+                                v-decorator="['username',{rules:[{required:true,message:'请输入账户名',whitespace:true}]}]"
                                 size="large" placeholder="用户名">
                             <a-icon slot="prefix" type="user"/>
                         </a-input>
@@ -55,6 +55,8 @@
 
 <script>
 
+    import {mapMutations} from 'vuex'
+
     export default {
         name: "Login",
         data() {
@@ -75,12 +77,14 @@
                         if(!errors){
                             this.loading = true;
                             this.$post('login',values).then((r)=>{
-                                // let data = r.data.data
+                                let data = r.data.data
+                                this.saveLoginData(data)
                                 setTimeout(()=>{
                                     this.loading = false
                                 },500)
-                                // this.$router.push('/')
+                                this.$router.push('/')
                             }).catch(()=>{
+                                this.error="连接异常"
                                 setTimeout(()=>{
                                     this.loading = false
                                 },500)
@@ -94,6 +98,32 @@
             },
             handleTabChange(val) {
                 this.activeKey = val
+            },
+            ...mapMutations({
+                setToken: 'account/setToken',
+                setExpireTime: 'account/setExpireTime',
+                setPermissions: 'account/setPermissions',
+                setRoles: 'account/setRoles',
+                setUser: 'account/setUser',
+                setTheme: 'setting/setTheme',
+                setLayout: 'setting/setLayout',
+                setMultipage: 'setting/setMultipage',
+                fixSiderbar: 'setting/fixSiderbar',
+                fixHeader: 'setting/fixHeader',
+                setColor: 'setting/setColor'
+            }),
+            saveLoginData(data){
+                this.setToken(data.token)
+                this.setExpireTime(data.exipreTime)
+                this.setUser(data.user)
+                this.setPermissions(data.permissions)
+                this.setRoles(data.roles)
+                this.setTheme(data.config.theme)
+                this.setLayout(data.config.layout)
+                this.setMultipage(data.config.multiPage === '1')
+                this.fixSiderbar(data.config.fixSiderbar === '1')
+                this.fixHeader(data.config.fixHeader === '1')
+                this.setColor(data.config.color)
             }
         }
     }
