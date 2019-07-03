@@ -1,8 +1,21 @@
 import Vue from 'vue'
+import router from './router'
+import Antd from 'ant-design-vue'
+import request from './utils/request'
 import App from './App.vue'
+
+import 'ant-design-vue/dist/antd.css'
 
 Vue.config.productionTip = false
 
+Vue.use(Antd)
+
+Vue.prototype.$post = request.post
+Vue.prototype.$get = request.get
+Vue.prototype.$put = request.put
+Vue.prototype.$delete = request.delete
+
 new Vue({
-  render: h => h(App),
+    router,
+    render: h => h(App),
 }).$mount('#app')
